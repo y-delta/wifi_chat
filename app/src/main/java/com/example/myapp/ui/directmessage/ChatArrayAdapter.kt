@@ -1,5 +1,6 @@
 package com.delta.chatscreen
 
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import com.example.myapp.R
 import com.example.myapp.ui.directmessage.ChatMessage
 
 
-internal class ChatArrayAdapter(
+class ChatArrayAdapter(
     context: Context, textViewResourceId: Int
 ) : ArrayAdapter<ChatMessage>(context, textViewResourceId) {
     private var chatText: TextView? = null
@@ -31,18 +32,19 @@ internal class ChatArrayAdapter(
         return chatMessageList[index]
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val layoutInflater: LayoutInflater = LayoutInflater.from(context)
         val chatMessageObj = getItem(position)
-        var row = convertView
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        row = if (chatMessageObj.left) {
-            inflater.inflate(R.layout.right, parent, false)
+        var row: View
+        val inflater =
+            this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        if (chatMessageObj.left) {
+            row = layoutInflater.inflate(R.layout.right, parent, false)
         } else {
-            inflater.inflate(R.layout.left, parent, false)
+            row = layoutInflater.inflate(R.layout.left, parent, false)
         }
-        chatText = row.findViewById<View>(R.id.msgr) as TextView
+        chatText = row.findViewById(R.id.msgr)
         chatText!!.text = chatMessageObj.message
         return row
     }
-
 }

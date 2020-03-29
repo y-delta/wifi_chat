@@ -25,7 +25,7 @@ class DirectMessageFragment : Fragment() {
     private var chatText: EditText? = null
     private var buttonSend: Button? = null
     private var side = false
-    private val globalContext: Context? = this.activity
+    private var globalContext: Context? = null
     private lateinit var message: String
 
     override fun onCreateView(
@@ -34,6 +34,7 @@ class DirectMessageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_directmessage, container, false)
+        globalContext = this.activity
         super.onCreate(savedInstanceState)
         buttonSend = root.findViewById<View>(R.id.send) as Button
         listView = root.findViewById<View>(R.id.msgview) as ListView
@@ -45,7 +46,6 @@ class DirectMessageFragment : Fragment() {
 //        chatArrayAdapter = globalContext?.let { ChatArrayAdapter(it, R.layout.right) }
         listView?.adapter = chatArrayAdapter
         chatText = root.findViewById<View>(R.id.msg) as EditText
-        message = chatText!!.text.toString()
         chatText!!.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 sendChatMessage()
@@ -69,10 +69,11 @@ class DirectMessageFragment : Fragment() {
     }
 
     private fun sendChatMessage(): Boolean {
-        // chatArrayAdapter?.add(ChatMessage(false, "hello hi"))
+//         chatArrayAdapter?.add(ChatMessage(false, "hello hi"))
+         chatArrayAdapter?.add(ChatMessage(side, chatText!!.text.toString()))
         chatText!!.setText("")
         side = !side
-        chatArrayAdapter?.add(ChatMessage(side, message))
+
         return true
     }
 
