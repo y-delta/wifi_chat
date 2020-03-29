@@ -15,9 +15,7 @@ class ChatArrayAdapter(
     context: Context, textViewResourceId: Int
 ) : ArrayAdapter<ChatMessage>(context, textViewResourceId) {
     private var chatText: TextView? = null
-    //  var chatMessageList: MutableList<ChatMessage> = ArrayList()
-    private var chatMessageList =ArrayList<ChatMessage>()
-    var chatMessageList1 = mutableListOf<ChatMessage>()
+    private var chatMessageList = ArrayList<ChatMessage>()
 
     override fun add(`object`: ChatMessage?) {
         chatMessageList.add(`object`!!)

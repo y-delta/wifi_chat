@@ -16,7 +16,7 @@ import com.delta.chatscreen.ChatArrayAdapter
 import com.example.myapp.R
 
 
-//data class ChatMessage(var left: Boolean, var message: String)
+data class ChatMessage(var left: Boolean, var message: String)
 //data class ChatMessage1(val message : String, val time: Int)
 
 class DirectMessageFragment : Fragment() {
@@ -26,7 +26,6 @@ class DirectMessageFragment : Fragment() {
     private var buttonSend: Button? = null
     private var side = false
     private var globalContext: Context? = null
-    private lateinit var message: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +41,6 @@ class DirectMessageFragment : Fragment() {
         chatArrayAdapter =
             ChatArrayAdapter(globalContext!!, R.layout.right)
 
-
-//        chatArrayAdapter = globalContext?.let { ChatArrayAdapter(it, R.layout.right) }
         listView?.adapter = chatArrayAdapter
         chatText = root.findViewById<View>(R.id.msg) as EditText
         chatText!!.setOnKeyListener { _, keyCode, event ->
@@ -51,11 +48,7 @@ class DirectMessageFragment : Fragment() {
                 sendChatMessage()
             } else false
         }
-        buttonSend?.setOnClickListener { sendChatMessage()
-//            chatText!!.setText("")
-//            side = !side
-//            chatArrayAdapter!!.add(ChatMessage(side, message))
-             }
+        buttonSend?.setOnClickListener { sendChatMessage() }
         listView?.transcriptMode = AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL
         listView?.adapter = chatArrayAdapter
         //to scroll the list view to bottom on data change
@@ -69,8 +62,7 @@ class DirectMessageFragment : Fragment() {
     }
 
     private fun sendChatMessage(): Boolean {
-//         chatArrayAdapter?.add(ChatMessage(false, "hello hi"))
-         chatArrayAdapter?.add(ChatMessage(side, chatText!!.text.toString()))
+        chatArrayAdapter?.add(ChatMessage(side, chatText!!.text.toString()))
         chatText!!.setText("")
         side = !side
 
