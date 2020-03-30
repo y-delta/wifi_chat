@@ -1,6 +1,9 @@
 package com.example.myapp.ui.ledger
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +17,20 @@ import com.example.myapp.ui.main.Model
 import com.example.myapp.ui.main.MyAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+
 class LedgerFragment : Fragment() {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
+    var list = mutableListOf<Model>()
+    private lateinit var listView: ListView
+    private lateinit var root: View
+    private lateinit var thisFragment:LedgerFragment
+
+    init{
+        list.add(Model("Yelahanka", "Satellite bus station", R.drawable.helpwe))
+        list.add(Model("SVIT", "Canteen", R.drawable.btn_rounded))
+        list.add(Model("SVIT", "Boys Hostel"))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,34 +39,17 @@ class LedgerFragment : Fragment() {
     ): View? {
         notificationsViewModel =
             ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_ledger, container, false)
-        var listView = root.findViewById<ListView>(R.id.listView)
-        var list = mutableListOf<Model>()
-
-
-        list.add(Model("BadBOi", "Hello", R.drawable.btn_rounded))
-        list.add(Model("BadBOi1", "Hello!", R.drawable.btn_rounded))
-        list.add(Model("BadBOi2", "Hello!!", R.drawable.btn_rounded))
-        list.add(Model("BadBOi3", "Hello!!!", R.drawable.btn_rounded))
+        root = inflater.inflate(R.layout.fragment_ledger, container, false)
+        listView = root.findViewById<ListView>(R.id.listView)
+        //  list.add(Model("BadBOi3", "Hello!!!", R.drawable.btn_rounded))
 
         listView.adapter = MyAdapter(root.context, R.layout.row, list)
 
-        listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
-            if (position == 0) {
-                Toast.makeText(root.context, "clicked on 1", Toast.LENGTH_LONG).show()
-            }
-            if (position == 1) {
-                Toast.makeText(root.context, "clicked on 1", Toast.LENGTH_LONG).show()
-            }
-            if (position == 2) {
-                Toast.makeText(root.context, "clicked on 1", Toast.LENGTH_LONG).show()
-            }
-            if (position == 3) {
-                Toast.makeText(root.context, "clicked on 1", Toast.LENGTH_LONG).show()
-            }
+        listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position:Int, id:Long ->
+            Toast.makeText(root.context, "Clicked on" + list[position].description, Toast.LENGTH_LONG).show()
         }
         val add = root.findViewById<FloatingActionButton>(R.id.add)
-        add.setOnClickListener {
+        add.setOnClickListener{
             //            val  dialogBuilder = AlertDialog.Builder(root.context)
 //            dialogBuilder.setTitle("Location?")
 //            val necessities = arrayOf("Water", "Food","First-Aid","Sanitation");
@@ -63,8 +60,8 @@ class LedgerFragment : Fragment() {
 //            dialogBuilder.setPositiveButton("OK")
 //            {
 //                dialog, which->
-            list.add(Model("BadBOi2", "Hello!!", R.drawable.btn_rounded))
-            listView.adapter = MyAdapter(root.context, R.layout.row, list)
+//                list.add(Model("BadBOi2", "Hello!!", R.drawable.btn_rounded))
+//                listView.adapter = MyAdapter(root.context, R.layout.row, list)
 //
 //            }
 //
@@ -72,19 +69,27 @@ class LedgerFragment : Fragment() {
 //            dialogBuilder.setMessage("dfasdfsdf")
 //            val dialog = dialogBuilder.create()
 //            dialog.show()
-//            val intent = Intent(root.context, TakeInput::class.java)
-//            startActivity(intent)
-
+            val intent = Intent(root.context, TakeInput::class.java)
+            intent.putExtra("key", "value")
+            startActivityForResult(intent, 6969)
         }
 
         return root
 
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        var args = getArguments()
-//        var loc = args?.getString("Location")
-//        Toast.makeText(this.context, loc, Toast.LENGTH_LONG).show()
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 6969){
+            if(resultCode == 7070){
+                val location = data!!.getStringExtra("Location")
+                val landmark = data!!.getStringExtra("Landmark")
+
+                list.add(Model(location, landmark, R.drawable.btn_rounded))
+                listView.adapter = MyAdapter(root.context, R.layout.row, list)
+            }
+        }
+    }
+
+
 }
